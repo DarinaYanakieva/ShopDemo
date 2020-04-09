@@ -1,5 +1,6 @@
 package com.swiftacad.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,13 @@ public class ProductController {
 		}
 	}
 	
+	@RequestMapping(value = "products", method = RequestMethod.GET)
+	public ResponseEntity<List<Product>> findAll() {
+		List<Product> products = new ArrayList<>();
+		productRepository.findAll().forEach( p -> products.add(p));
+		
+		return new ResponseEntity<>(products, HttpStatus.OK);
+	}
 	@RequestMapping(value = "product/description/{description}", method = RequestMethod.GET)
 	public ResponseEntity<List<Product>> findByDescription(@PathVariable("description") String description){
 		List<Product> products = productRepository.findByDescription(description);
@@ -55,4 +63,12 @@ public class ProductController {
 		productRepository.save(product);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
+	
+	@RequestMapping(value="product/{id}", method = RequestMethod.DELETE) 
+	public ResponseEntity<?> deleteById(@PathVariable("id") Long id ) {
+		productRepository.deleteById(id);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+		
+	
 }
